@@ -7,6 +7,8 @@ router.get("/signup", (req, res, next) => {
   res.render("auth/signup");
 });
 
+// Hash little password don't save the words. :D
+
 router.post("/signup", (req, res) => { 
     const { username, password } =  req.body
 
@@ -27,6 +29,39 @@ router.post("/signup", (req, res) => {
         })
         .catch((err)=>console.log(err))
 })
+
+//<<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>>
+
+// or with the bcryptjs => not sure if correct!
+
+
+
+// const bcryptjs = require('bcryptjs');
+
+// router.post("/signup", (req, res) => { 
+//     const {username, password } = req.body
+
+//         User.findOne({username})
+//             .then((usernameExist) => {
+//                 if(usernameExist) {
+//                     res.render('auth/signup', {err: "This Username is in use"})
+//                 }
+//                 else {
+//                     bcryptjs
+//                     .genSalt(saltRounds)
+//                     .hash( password , salt)
+//                     .then(hashedPassword => {
+//                         User.create({username, password: hashedPassword})
+//                         .then(() => {
+//                             res.render('/profile')
+//                         })
+//                     }) 
+//                 }
+//             })
+//             .catch((err) => console.log(err))
+//  })
+
+//<<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>>
 
 router.get('/profile',(req, res) => {
     res.render('auth/profile')
