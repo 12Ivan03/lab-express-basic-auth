@@ -4,9 +4,15 @@
     <label for="username"> Username:
         <input type="text" id="username" name="username" placeholder="Usename">
     </label>
+    {{#if err}}
+        <p>{{err}}</p>
+    {{/if}}
+    <br>
+    <br>
     <label for="pwd"> Password:
         <input type="password" id="pwd" name="password" placeholder="********">
     </label>
+    <br>
     <br>
     <button type="submit">Sign up</button>
 </form>

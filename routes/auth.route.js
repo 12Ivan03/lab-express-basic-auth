@@ -10,12 +10,20 @@ router.get("/signup", (req, res, next) => {
 router.post("/signup", (req, res) => { 
     const { username, password } =  req.body
 
-    bcrypt.hash(password, saltRounds)
-        .then((hash) => {
-            return User.create({username, password: hash})
-        })
-        .then(user => {
-            res.redirect('/profile')
+    User.findOne({username})
+        .then((foundUser) => {
+            if(foundUser) {
+                res.render('auth/signup', {err: 'Existing user'})
+            }
+            else {
+                bcrypt.hash(password, saltRounds)
+                .then((hash) => {
+                    return User.create({username, password: hash})
+                })
+                .then(user => {
+                    res.redirect('/profile')
+                })
+            }
         })
         .catch((err)=>console.log(err))
 })
