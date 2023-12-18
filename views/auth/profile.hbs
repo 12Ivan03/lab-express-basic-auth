@@ -1,1 +1,13 @@
-<h1>Welcome to your profile</h1>
+{{#if user}}
+<h1>Welcome to your profile {{user.username}}</h1>
+<br>
+<p>Best private pic</p>
+<button><a href="/private">Private picture</a></button>
+<br>
+<br>
+<form action="/logout" method="post">
+    <button type="submit">Sign out</button>
+</form>
+{{else}}
+<p>You're not login or sign up</p>
+{{/if}}

@@ -1,17 +1,12 @@
-<h1>Sign up</h1>
+<h1>Login</h1>
 
-<form action="/signup" method="post">
+<form action="/login" method="POST">
     <label for="username"> Username:
         <input type="text" id="username" name="username" placeholder="Usename">
     </label>
-    {{#if err}}
-        <p>{{err}}</p>
+    {{#if errMsg}}
+        <p>{{errMsg}}</p>
     {{/if}}
-    <br>
-    <br>
-    <label for="name"> Name:
-        <input type="text" id="name" name="name" placeholder="Name">
-    </label>
     <br>
     <br>
     <label for="pwd"> Password:
@@ -19,5 +14,5 @@
     </label>
     <br>
     <br>
-    <button type="submit">Sign up</button>
+    <button type="submit">Login</button>
 </form>
