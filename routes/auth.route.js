@@ -9,7 +9,7 @@ router.get("/signup", isLoggedOut, (req, res, next) => {
   res.render("auth/signup");
 });
 
-// Hash little password don't save the words. :D
+// Hash little password don't save the real words. :D
 // Alretnative**
 router.post("/signup", (req, res) => { 
 
@@ -41,8 +41,8 @@ router.post("/signup", (req, res) => {
         .catch((err)=>console.log(err))
 });
 
-router.get('/login', isLoggedOut, (req, res, next) => {
-    res.render('auth/login')
+router.get('/login', isLoggedOut, (req, res, next) => { //, isLoggedOut, <== is a middleware to check if the request(person) is logged in or not... and execute the appropriate route. '/login' is the incomming route
+    res.render('auth/login') // <== point to the route to render it on the layout... when render no / begins.
 })
 
 router.post('/login', (req, res) => {
@@ -54,19 +54,35 @@ router.post('/login', (req, res) => {
     }
 
     User.findOne({username})
+
         .then((LogUser) => {
             if(!LogUser) {
                 res.render('auth/login', {errMsg: "Inccorect Username and/or Password"})
                 return;
             }
-            else if (bcrypt.compare(password, LogUser.password)){
-                req.session.currentUser = LogUser
-                res.redirect('/profile')
-            } else {
-                res.render('auth/login', {errMsg: "Inccorect Username and/or Password"})
-            }
-        })
 
+            bcrypt.compare(password, LogUser.password)
+                .then((approvedPwd) => {
+                    if(approvedPwd) {
+                        req.session.currentUser = LogUser
+                        res.redirect('/profile')
+                    } else {
+                        res.render('auth/login', {errMsgPwd: "Inccorect Password"})
+                    }
+                })
+                .catch((err) =>console.log(err))
+
+
+            // it's not synchronous 
+            // else if (bcrypt.compare(password, LogUser.password)){
+            //     console.log('PASSWORD FROM THE LOG USER:',LogUser.password)
+            //     req.session.currentUser = LogUser
+            //     res.redirect('/profile')
+            // } else {
+            //     res.render('auth/login', {errMsg: "Inccorect Username and/or Password"})
+            // }
+        })
+        .catch((err) =>console.log(err))
 });
 
 
@@ -74,9 +90,10 @@ router.get('/profile', isLoggedIn, (req, res, next) => {
     console.log('curent user/s id', req.session.currentUser._id)
     const userId = req.session.currentUser._id
     User.findById(userId) 
-        .then(() => {
-            res.render('auth/profile', { user: req.session.currentUser })
+        .then((user) => {
+            res.render('auth/profile', {user})
         })
+        .catch((err)=>console.log(err))
 });
 
 router.post('/logout', (req, res) => {
