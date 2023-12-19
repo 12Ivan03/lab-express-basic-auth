@@ -57,7 +57,7 @@ router.post('/login', (req, res) => {
 
         .then((LogUser) => {
             if(!LogUser) {
-                res.render('auth/login', {errMsg: "Inccorect Username"})
+                res.render('auth/login', {errMsgUser: "Inccorect Username"})
                 return;
             }
 

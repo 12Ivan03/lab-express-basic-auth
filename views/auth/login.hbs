@@ -4,6 +4,9 @@
     <label for="username"> Username:
         <input type="text" id="username" name="username" placeholder="Usename">
     </label>
+    {{#if errMsgUser}}
+        <p>{{errMsgUser}}</p>
+    {{/if}}
     {{#if errMsg}}
         <p>{{errMsg}}</p>
     {{/if}}
@@ -14,6 +17,9 @@
     </label>
     {{#if errMsgPwd}}
         <p>{{errMsgPwd}}</p>
+    {{/if}}
+    {{#if errMsg}}
+        <p>{{errMsg}}</p>
     {{/if}}
     <br>
     <br>
