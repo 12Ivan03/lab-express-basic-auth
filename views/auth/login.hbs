@@ -12,6 +12,9 @@
     <label for="pwd"> Password:
         <input type="password" id="pwd" name="password" placeholder="********">
     </label>
+    {{#if errMsg}}
+        <p>{{errMsg}}</p>
+    {{/if}}
     <br>
     <br>
     <button type="submit">Login</button>

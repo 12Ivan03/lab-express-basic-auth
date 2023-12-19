@@ -3,14 +3,24 @@ const User = require('../models/User.model.js');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-router.get("/signup", (req, res, next) => {
+const{ isLoggedIn, isLoggedOut } = require('../middlewares/route-guard')
+
+router.get("/signup", isLoggedOut, (req, res, next) => {
   res.render("auth/signup");
 });
 
 // Hash little password don't save the words. :D
 // Alretnative**
 router.post("/signup", (req, res) => { 
-    const { username, password } =  req.body
+
+    const { username, password, name } =  req.body
+
+    console.log('this is the BODY',req.body)
+
+    if(username === '' || password === ''){
+        res.render('auth/signup', {errMsg: "Please fill in all the required spaces"})
+        return;
+    }
 
     User.findOne({username})
         .then((foundUser) => {
@@ -20,7 +30,7 @@ router.post("/signup", (req, res) => {
             else {
                 bcrypt.hash(password, saltRounds)
                 .then((hash) => {
-                    return User.create({username, password: hash})
+                    return User.create({username, password: hash, name})
                 })
                 .then(user => {
                     req.session.currentUser = user;
@@ -31,15 +41,15 @@ router.post("/signup", (req, res) => {
         .catch((err)=>console.log(err))
 });
 
-router.get('/login' ,(req, res) => {
+router.get('/login', isLoggedOut, (req, res, next) => {
     res.render('auth/login')
 })
 
-router.post('/login' ,(req, res) => {
+router.post('/login', (req, res) => {
     const { username, password } = req.body
 
     if(username === '' || password === ''){
-        res.render('auth/login', {errMsg: "Inccorect Username and/or Password"})
+        res.render('auth/login', {errMsg: "Please fill in all the required spaces"})
         return;
     }
 
@@ -60,13 +70,13 @@ router.post('/login' ,(req, res) => {
 });
 
 
-router.get('/profile', (req, res) => {
-    console.log(req.session)
-    if(req.session.currentUser) {
-        res.render('auth/profile', {user: req.session.currentUser})
-    } else {
-        res.redirect('/login')
-    }
+router.get('/profile', isLoggedIn, (req, res, next) => {
+    console.log('curent user/s id', req.session.currentUser._id)
+    const userId = req.session.currentUser._id
+    User.findById(userId) 
+        .then(() => {
+            res.render('auth/profile', { user: req.session.currentUser })
+        })
 });
 
 router.post('/logout', (req, res) => {
@@ -79,9 +89,34 @@ router.get('/main', (req, res) => {
     res.render('main')
 })
 
-router.get('/private', (req, res) => {
+router.get('/private', isLoggedIn, (req, res, next) => {
     res.render('private')
 })
+
+
+router.get('/edit-profile/:userId', (req, res, next ) => {
+    const {userId} = req.params;
+
+    User.findById(userId)
+        .then(() => {
+            //console.log(req.session.currentUser)
+            res.render('auth/edit-profile', {foundUser: req.session.currentUser})
+        })
+        .catch((err) => console.log(err))
+});
+
+router.post('/edit-profile/:userId', (req,res,next) => {
+    const {userId} = req.params;
+    console.log(req.params)
+
+    User.findByIdAndUpdate(userId, req.body, {new: true})
+        .then((updateUser) => {
+            console.log('updated user',updateUser)
+            res.redirect('/profile')
+        })
+        .catch((err) => console.log(err))
+})
+
 
 module.exports = router;
 

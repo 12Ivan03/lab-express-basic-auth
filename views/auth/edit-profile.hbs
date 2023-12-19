@@ -1,0 +1,18 @@
+<h1>Edit</h1>
+
+<form action="/edit-profile/{{foundUser._id}}" method="post">
+    <label for="username"> Username:
+        <input type="text" id="username" name="username" value="{{foundUser.username}}">
+    </label>
+    {{#if errMsg}}
+        <p>{{errMsg}}</p>
+    {{/if}}
+    <br>
+    <br>
+    <label for="name"> Name:
+        <input type="text" id="name" name="name" value="{{foundUser.name}}">
+    </label>
+    <br>
+    <br>
+    <button type="submit">Edit</button>
+</form>

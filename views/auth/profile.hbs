@@ -1,13 +1,16 @@
 {{#if user}}
-<h1>Welcome to your profile {{user.username}}</h1>
-<br>
-<p>Best private pic</p>
-<button><a href="/private">Private picture</a></button>
-<br>
-<br>
-<form action="/logout" method="post">
-    <button type="submit">Sign out</button>
-</form>
+    <h1>Welcome to your profile {{#if user.name}}{{user.name}}{{else}}{{user.username}}{{/if}}</h1>
+    <br>
+    <p>Best private cat-pic </p>
+    <button><a href="/private">Private picture</a></button>
+    <br>
+    <p>Forgot to write your name. &#x1F609;</p>
+    <button><a href="/edit-profile/{{user._id}}">Edit Profile</a></button>
+    <br>
+    <br>
+    <form action="/logout" method="post">
+        <button type="submit">Sign out</button>
+    </form>
 {{else}}
-<p>You're not login or sign up</p>
+    <p>You're not logged in or signed up. Please sign in/login first</p>
 {{/if}}
