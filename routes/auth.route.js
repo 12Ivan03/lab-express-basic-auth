@@ -57,11 +57,12 @@ router.post('/login', (req, res) => {
 
         .then((LogUser) => {
             if(!LogUser) {
-                res.render('auth/login', {errMsg: "Inccorect Username and/or Password"})
+                res.render('auth/login', {errMsg: "Inccorect Username"})
                 return;
             }
 
-            bcrypt.compare(password, LogUser.password)
+            bcrypt
+                .compare(password, LogUser.password)
                 .then((approvedPwd) => {
                     if(approvedPwd) {
                         req.session.currentUser = LogUser
@@ -109,7 +110,6 @@ router.get('/main', (req, res) => {
 router.get('/private', isLoggedIn, (req, res, next) => {
     res.render('private')
 })
-
 
 router.get('/edit-profile/:userId', (req, res, next ) => {
     const {userId} = req.params;
