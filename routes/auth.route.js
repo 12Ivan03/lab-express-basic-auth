@@ -61,8 +61,7 @@ router.post('/login', (req, res) => {
                 return;
             }
 
-            bcrypt
-                .compare(password, LogUser.password)
+            bcrypt.compare(password, LogUser.password)
                 .then((approvedPwd) => {
                     if(approvedPwd) {
                         req.session.currentUser = LogUser
